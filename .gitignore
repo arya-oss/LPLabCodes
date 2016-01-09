@@ -1,0 +1,6 @@
+#window files
+*.exe
+*.o
+#unix files
+*.out
+*.txt
