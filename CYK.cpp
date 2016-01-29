@@ -48,8 +48,10 @@ int main(int argc, char * argv[]) {
 	map<string, vector<string> >::iterator it;
 
 	file.close();
-	string word = "baaba";
-	int n = word.size();
+	//string word = "baaba";
+	string word;
+    getline(cin,word);
+    int n = word.size();
 	int p = variables.size();
 
 	bool P[n][n][p];
