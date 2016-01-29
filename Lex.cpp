@@ -3,15 +3,23 @@
 
 using namespace std;
 
+/**
+ * Title - Lexical Analyser for C language, Implemented in C++
+ *
+ * Author:  Rajmani Arya, CSE NITW 3rd Year.
+ * Date: 22 Jan, 2016
+ */
+
+
 char keys[25][10] = {"main","int","float","char","double","if","else","for","while","do","goto","return","break",
     "continue","switch","case","default","long","struct","typedef","static","register","unsigned","void","sizeof"};
 char ops[11] = { '-', '+', '*', '/', '%', '=', '!', '&', '|', '<', '>' };
-    
+
 
 class LexicalAnalyser {
 private:
     char * code;
-    set<char *> keywords, numbers, identifiers;
+    set<string> keywords, numbers, identifiers;
     set<char> operators, delimeters;
 
     bool is_blank(int in);
@@ -26,7 +34,7 @@ public:
     }
     void do_lex();
     void print_keys(){
-    	set<char *>::iterator it;
+    	set<string>::iterator it;
     	cout << "keywords : ";
     	for (it = keywords.begin(); it != keywords.end(); ++it)
     	{
@@ -53,8 +61,8 @@ public:
     	cout << "\n";
     }
     void print_nums() {
-    	set<char *>::iterator it;
-    	cout << "numbers : ";
+    	set<string>::iterator it;
+    	cout << "Literals : ";
     	for (it = numbers.begin(); it != numbers.end(); ++it)
     	{
     		cout << *it << ", ";
@@ -62,7 +70,7 @@ public:
     	cout << "\n";
     }
     void print_ids() {
-    	set<char *>::iterator it;
+    	set<string>::iterator it;
     	cout << "identifiers : ";
     	for (it = identifiers.begin(); it != identifiers.end(); ++it)
     	{
@@ -110,25 +118,32 @@ void LexicalAnalyser::do_lex(){
         i = skip_blank(i);
         if(code[i] == '#'){
             delimeters.insert('#');
+            i++;
             i=skip_blank(i);
+            t = 0;
+            while(!(code[i] == ' ' || code[i] == '"' || code[i]=='<')){
+                tok[t++] = code[i++];
+            }
+            tok[t] = '\0';
+            identifiers.insert(string(tok));
+            i = skip_blank(i);
             if(is_delimeter(i)){
             	ch = code[i];
             	delimeters.insert(code[i]);
             }
-            if(ch == '"') {
-            	t=0;
+            if(code[i] == '"') {
+            	t=0; i++;
             	while(code[i] != '"')
             		tok[t++] = code[i++];
             	tok[t] = '\0';
-            	identifiers.insert(tok);
-            	cout << "Identifiers: " << tok << "\n";
-            } else if( ch == '<') {
-            	t=0;
+            	identifiers.insert(string(tok));
+            } else if( code[i] == '<') {
+            	t=0; i++;
             	while(code[i] != '>')
             		tok[t++] = code[i++];
             	tok[t] = '\0';
-            	identifiers.insert(tok);
-            	cout << "Identifiers: " << tok << "\n";
+            	delimeters.insert('>');
+            	identifiers.insert(string(tok));
             }
             if(is_delimeter(i)){
             	delimeters.insert(code[i++]);
@@ -141,11 +156,9 @@ void LexicalAnalyser::do_lex(){
         	}
         	tok[t] = '\0';
         	if(is_keyword(tok)) {
-        		cout << "keywords : " << tok << "\n";
-        		keywords.insert(tok);
+        		keywords.insert(string(tok));
         	} else {
-        		cout << "Identifiers: " << tok << "\n";
-        		identifiers.insert(tok);
+        		identifiers.insert(string(tok));
         	}
         	//cout << tok << "i\n";
         }
@@ -155,8 +168,17 @@ void LexicalAnalyser::do_lex(){
         		tok[t++] = code[i++];
         	}
         	tok[t] = '\0';
-        	numbers.insert(tok);
-        	cout <<"Numbers : " << tok << "\n";
+        	numbers.insert(string(tok));
+        }
+        if(code[i] == '"') {
+            t=0;
+            tok[t++] = code[i++];
+            while(code[i] != '"') {
+                tok[t++] = code[i++];
+            }
+            tok[t++] = code[i++];
+            tok[t] = '\0';
+            numbers.insert(string(tok));
         }
         if(is_delimeter(code[i])) {
         	delimeters.insert(code[i]);
@@ -170,20 +192,21 @@ void LexicalAnalyser::do_lex(){
 int main(int argc, char const *argv[])
 {
 	fstream fin; char buf[MAX_CODE_LENGTH];
-	memset(buf, MAX_CODE_LENGTH, '\0');
+	
+    memset(buf, MAX_CODE_LENGTH, '\0');
 	char tmp[128];
 	fin.open("code.c", ios::in);
 	fin.getline(buf, 128);
 	while(fin.getline(tmp, 128)) {
 		strcat(buf, tmp);
 	}
-	//printf("%s\n", buf);
+
 	fin.close();
 	LexicalAnalyser lex(buf);
 	lex.do_lex();
-	//lex.print_keys();
-	//lex.print_ids();
-	//lex.print_nums();
+	lex.print_keys();
+	lex.print_ids();
+	lex.print_nums();
 	lex.print_ops();
 	lex.print_dels();
 	return 0;
