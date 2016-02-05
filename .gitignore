@@ -4,3 +4,5 @@
 #unix files
 *.out
 *.txt
+#lex files
+lex.yy.c
