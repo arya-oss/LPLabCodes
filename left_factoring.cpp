@@ -108,16 +108,16 @@ int main(int argc, char const *argv[])
 
 	print_map(prods);
 
-	while(1) {
+	//while(1) {
 		for ( mit = prods.begin(); mit != prods.end(); ++mit) {
 			factor(mit->first);
 		}
-		if (map_compare(prods, new_prods))
-			break;
+		//if (map_compare(prods, new_prods))
+			//break;
 		prods.clear();
-		prods = new_prods;
-		new_prods.clear();
-	}
+		//prods = new_prods;
+		//new_prods.clear();
+	//}
 	cout << "\nLeft factored grammar \n";
 	print_map(new_prods);
 
@@ -126,9 +126,6 @@ int main(int argc, char const *argv[])
 
 /** 
  * --- factor.txt ----
- * S-iEtS
- * S-iEtSeS
- * S-ab
- * S-abcd
+ * S-iEtS|iEtSeS|ab|abcd
  * E-b
  */

@@ -1,0 +1,5 @@
+#!/bin/sh
+yacc -d compiler.y
+lex compiler.l
+
+gcc -w -o subc.out lex.yy.c y.tab.c -ll -ly

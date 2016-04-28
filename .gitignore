@@ -1,8 +1,13 @@
-#window files
+# C, C++ execuatables and objects
 *.exe
 *.o
-#unix files
 *.out
-*.txt
-#lex files
+
+# Lex files
+
 lex.yy.c
+
+# yacc files
+
+y.tab.c
+y.tab.h
