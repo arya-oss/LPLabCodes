@@ -1,0 +1,19 @@
+a	=	10
+c	=	5
+$t2	=	a	==	c
+	if( not $t2)	goto $L1
+d	=	20
+		goto $L2
+$L1: 
+d	=	10
+$L2: 
+b	=	0
+$L3:
+$t3	=	b	!=	d
+if( not $t3)	goto $L4
+$t2	=	a	+	c
+a	=	$t2
+$t1	=	b	+	1
+b	=	$t1
+		goto $L3
+$L4: 
